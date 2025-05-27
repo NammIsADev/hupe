@@ -16,6 +16,7 @@ Windows:
 - Recover your installation/data
 - Recover Windows installation from virus or malware infections
 - Install customized Windows ISOs (Ghost Spectre, ...)
+- Make Windows PE (Recovery Enviroment) to recover your PC
 
 Network & Internet:
 - Set up home Wi-Fi networks
