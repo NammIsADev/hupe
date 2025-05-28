@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hupe IT Services</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .fade-in {
+      animation: fadeIn 1s ease-in forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .category {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    .category:hover {
+      transform: scale(1.02);
+    }
+    .services {
+      display: none;
+      margin-top: 10px;
+    }
+    .service {
+      background-color: #e8e8e8;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .service:hover {
+      background-color: #d0d0d0;
+    }
+    textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 25px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: #555;
+    }
+    .logo {
+      width: 120px;
+      display: block;
+      margin: 0 auto 20px;
+    }
+    .intro {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    .hidden { display: none; }
+    .why {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      max-width: 600px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="intro" class="intro fade-in">
+    <img src="logo.png" alt="Hupe Logo" class="logo">
+    <h1>Welcome to Hupe</h1>
+    <p>Your one-stop destination for IT solutions across Windows, Linux, macOS, Android, and more.</p>
+    <button onclick="showWhyPage()">Get Started</button>
+  </div>
+
+  <div id="why" class="container hidden fade-in">
+    <div class="why">
+      <h2>Why Choose Hupe?</h2>
+      <p>Because it's <strong>cheap</strong>, <strong>fast</strong>, and <strong>reliable</strong>. You get professional IT support tailored for your platform.</p>
+      <button onclick="startServiceList()">See Our Services</button>
+    </div>
+  </div>
+
+  <div id="main" class="container hidden fade-in">
+    <img src="logo.png" alt="Hupe Logo" class="logo">
+    <h1>Why Choose Our Services?</h1>
+    <p class="fade-in" style="text-align:center;margin-bottom:40px;">Because we provide deeply customized support for all major platforms, from OS setup to recovery and optimization, delivered with passion and expertise.</p>
+
+    <div id="categories"></div>
+    <div id="service-form" style="display:none;">
+      <h2>Request a Service</h2>
+      <textarea id="notes" rows="4" placeholder="Any extra notes..."></textarea>
+      <button onclick="submitRequest()">Submit Request</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>This page is <a href="https://github.com/NammISADev/hupe" target="_blank">open source</a> | &copy; Namm 2023 - 2025</p>
+  </footer>
+
+  <script>
+    const data = {
+      "Windows": [
+        "(Re)Install Windows (clean install or upgrade)",
+        "Activate Windows (with MAS, free)",
+        "Optimize Windows for performance",
+        "Troubleshoot common Windows issues",
+        "Secure Windows (firewall, antivirus)",
+        "Back up and restore data",
+        "Customize Windows UI",
+        "Install/update drivers",
+        "BIOS/UEFI configuration",
+        "Set up dual-boot systems",
+        "Recover installation/data",
+        "Recover from malware",
+        "Install custom Windows ISOs",
+        "Make Windows PE"
+      ],
+      "Network & Internet": [
+        "Set up home Wi-Fi",
+        "Set up server (NAS, Apache, Minecraft, ...)",
+        "Troubleshoot connectivity",
+        "Configure routers/switches",
+        "VPN setup"
+      ],
+      "Software": [
+        "Install essential apps",
+        "Remove bloatware/malware",
+        "Troubleshoot crashes",
+        "Install requested software (Office, Photoshop, etc.)"
+      ],
+      "macOS": [
+        "Install Hackintosh",
+        "Create bootable USB",
+        "Configure OpenCore",
+        "Custom OpenCore config",
+        "Review config",
+        "Install requested apps",
+        "Troubleshoot macOS issues"
+      ],
+      "Linux": [
+        "Install Linux",
+        "Create bootable USB",
+        "Distro recommendation",
+        "Usage guidance",
+        "Install Wine/Waydroid",
+        "Troubleshoot package errors"
+      ],
+      "Phone": [
+        "Unlock phone (supported models)",
+        "Jailbreak iPhone (iOS 15 or below, attempt iOS 16+)",
+        "Install custom ROM + TWRP",
+        "Install GSI ROM",
+        "Install Magisk/KernelSU",
+        "Optimize with root"
+      ],
+      "Android-x86": [
+        "Install BlissOS/Stock Android-x86",
+        "Create bootable USB",
+        "Dual-boot with Windows/Linux",
+        "Install GApps/MicroG",
+        "Troubleshoot apps",
+        "VM setup (VMware, VirtualBox)"
+      ],
+      "ChromeOS/FydeOS": [
+        "Install Brunch/FydeOS/ChromeOS Flex",
+        "Create bootable USB",
+        "Dual-boot setup",
+        "Persistent storage setup",
+        "Enable Linux (Crostini)",
+        "Install Android apps",
+        "Enable dev/root shell"
+      ]
+    };
+
+    const categoriesEl = document.getElementById('categories');
+    const serviceForm = document.getElementById('service-form');
+    let selectedService = null;
+
+    function showWhyPage() {
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('why').classList.remove('hidden');
+    }
+
+    function startServiceList() {
+      document.getElementById('why').classList.add('hidden');
+      document.getElementById('main').classList.remove('hidden');
+    }
+
+    for (const category in data) {
+      const categoryDiv = document.createElement('div');
+      categoryDiv.className = 'category';
+      categoryDiv.innerHTML = `<strong>${category}</strong>`;
+      const servicesDiv = document.createElement('div');
+      servicesDiv.className = 'services';
+      data[category].forEach(service => {
+        const s = document.createElement('div');
+        s.className = 'service';
+        s.textContent = service;
+        s.onclick = () => {
+          selectedService = `${category} - ${service}`;
+          serviceForm.style.display = 'block';
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+        servicesDiv.appendChild(s);
+      });
+      categoryDiv.onclick = () => {
+        servicesDiv.style.display = servicesDiv.style.display === 'block' ? 'none' : 'block';
+      };
+      categoryDiv.appendChild(servicesDiv);
+      categoriesEl.appendChild(categoryDiv);
+    }
+
+    function submitRequest() {
+      const notes = document.getElementById('notes').value;
+      alert(`Request Submitted:\nService: ${selectedService}\nNotes: ${notes}`);
+      document.getElementById('notes').value = '';
+      serviceForm.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
