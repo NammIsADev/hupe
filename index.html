@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hupe IT Services</title>
+  <link rel="icon" type="image/png" href="logo.png" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -111,7 +112,7 @@
       background-color: white;
       padding: 20px;
       border-radius: 10px;
-      margin: 20px auto;png
+      margin: 20px auto;
       max-width: 600px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       text-align: center;
@@ -203,6 +204,31 @@
       background: #232526 !important;
       color: #e2e2e2 !important;
     }
+    /* Payment modal animation and dark mode */
+    #payment-modal {
+      transition: background 0.25s;
+    }
+    #payment-content {
+      animation: popupIn 0.33s cubic-bezier(0.22, 0.61, 0.36, 1);
+      transition: background 0.2s, color 0.2s;
+    }
+    @keyframes popupIn {
+      from { opacity: 0; transform: scale(0.92) translateY(32px);}
+      to { opacity: 1; transform: scale(1) translateY(0);}
+    }
+    body.dark #payment-content {
+      background: #232526 !important;
+      color: #e2e2e2 !important;
+    }
+    body.dark #payment-modal {
+      background: rgba(0,0,0,0.7) !important;
+    }
+    body.dark #payment-content input,
+    body.dark #payment-content textarea {
+      background: #181a1b;
+      color: #e2e2e2;
+      border: 1px solid #444;
+    }
     @media (max-width: 700px) {
       .why-section {
         flex-direction: column;
@@ -227,7 +253,10 @@
     <img id="logo-img" src="logo.png" alt="Hupe Logo" class="logo">
     <h1 id="welcome-title">Welcome to Hupe</h1>
     <p id="welcome-desc">Your one-stop destination for IT solutions across Windows, Linux, macOS, Android, and more.</p>
-    <button id="get-started-btn" onclick="showMain()">Get Started</button>
+    <button id="get-started-btn" class="arrow-btn" onclick="showMain()">
+      <span id="get-started-btn-text">Get Started</span>
+      <span class="arrow-right">→</span>
+    </button>
     <div id="why" class="why fade-in">
       <h2 id="why-title">Why Choose Hupe?</h2>
       <div class="why-section">
@@ -249,7 +278,10 @@
   </div>
   <div id="main" class="container hidden fade-in">
     <img id="logo-img-main" src="logo.png" alt="Hupe Logo" class="logo">
-    <button class="back-btn" onclick="showIntro()" id="main-back-btn">Back</button>
+    <button class="back-btn arrow-btn" onclick="showIntro()" id="main-back-btn">
+      <span class="arrow-left">←</span>
+      <span id="main-back-btn-text">Back</span>
+    </button>
     <h1 id="main-title">Please choose the service you'd like.</h1>
     <p class="fade-in" id="main-desc" style="text-align:center;margin-bottom:40px;">We offer 55+ specialized IT services designed to optimize your devices across Windows, Linux, macOS, Android, and more. From fresh OS installations and performance tuning to data recovery and network setup, our experts provide tailored solutions with a focus on speed, affordability, and reliability.</p>
     <div id="categories"></div>
@@ -259,8 +291,14 @@
       </div>
       <h2 id="request-title">Request a Service</h2>
       <div id="selected-service" style="margin:10px 0 18px 0; text-align:center; font-weight:bold; color:#007bff;"></div>
-      <button id="submit-request-btn">Submit Request</button>
-      <button class="back-btn" onclick="hideServiceForm()" id="service-back-btn">Back</button>
+      <button id="submit-request-btn" class="arrow-btn">
+        <span id="submit-request-btn-text">Submit Request</span>
+        <span class="arrow-right">→</span>
+      </button>
+      <button class="back-btn arrow-btn" onclick="hideServiceForm()" id="service-back-btn">
+        <span class="arrow-left">←</span>
+        <span id="service-back-btn-text">Back</span>
+      </button>
     </div>
   </div>
   <footer>
@@ -277,6 +315,12 @@
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cloudflare_Logo.svg/2560px-Cloudflare_Logo.svg.png" alt="Cloudflare" style="height:22px;vertical-align:middle;">
     </div>
   </footer>
+  <!-- Payment Modal (hidden by default) -->
+  <div id="payment-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.45);z-index:99999;align-items:center;justify-content:center;">
+    <div id="payment-content" style="background:#fff;max-width:420px;width:96vw;padding:28px 18px 18px 18px;border-radius:18px;box-shadow:0 4px 32px rgba(0,0,0,0.18);text-align:center;position:relative;">
+      <!-- Content will be injected by JS -->
+    </div>
+  </div>
   <script>
     const data = {
       "Windows": [
@@ -372,70 +416,172 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // Update language with emoji
+    const translations = {
+      en: {
+        welcome: "Welcome to Hupe",
+        desc: "Your one-stop destination for IT solutions across Windows, Linux, macOS, Android, and more.",
+        getStarted: "Get Started 🚀",
+        why: "Why Choose Hupe? 🤔",
+        cheap: "Cheap 💸",
+        cheapDesc: "Affordable IT support for everyone, without hidden fees.",
+        fast: "Fast ⚡",
+        fastDesc: "Quick response and rapid solutions to get you running ASAP.",
+        reliable: "Reliable 🛡️",
+        reliableDesc: "Professional, trustworthy service tailored to your needs.",
+        back: "Back",
+        mainTitle: "Please choose the service you'd like.",
+        mainDesc: "We offer 55+ specialized IT services designed to optimize your devices across Windows, Linux, macOS, Android, and more. From fresh OS installations and performance tuning to data recovery and network setup, our experts provide tailored solutions with a focus on speed, affordability, and reliability.",
+        requestTitle: "Request a Service",
+        submit: "Submit Request",
+        remote: 'This service requires remote access. Please download and run <a href="https://anydesk.com/download" target="_blank" style="color:#007bff;text-decoration:underline;">AnyDesk</a> or <a href="https://www.teamviewer.com/en/download/" target="_blank" style="color:#007bff;text-decoration:underline;">TeamViewer</a>.',
+        footer: 'This page is <a href="https://github.com/NammISADev/hupe" target="_blank">open source</a> | &copy; Namm 2023 - 2025'
+      },
+      vi: {
+        welcome: "Chào mừng đến với Hupe",
+        desc: "Nơi bạn nhận được mọi giải pháp IT cho Windows, Linux, macOS, Android và nhiều nền tảng khác.",
+        getStarted: "Bắt đầu 🚀",
+        why: "Tại sao chọn Hupe? 🤔",
+        cheap: "Rẻ 💸",
+        cheapDesc: "Hỗ trợ IT giá rẻ cho mọi người, không phí ẩn.",
+        fast: "Nhanh ⚡",
+        fastDesc: "Phản hồi nhanh và xử lý sự cố tức thì.",
+        reliable: "Uy tín 🛡️",
+        reliableDesc: "Dịch vụ chuyên nghiệp, đáng tin cậy, phù hợp nhu cầu.",
+        back: "Quay lại",
+        mainTitle: "Vui lòng chọn dịch vụ bạn muốn.",
+        mainDesc: "Chúng tôi cung cấp hơn 55 dịch vụ IT chuyên sâu tối ưu cho Windows, Linux, macOS, Android... Từ cài đặt hệ điều hành, tối ưu hiệu năng, phục hồi dữ liệu đến thiết lập mạng, đội ngũ chuyên gia của chúng tôi luôn tận tâm, nhanh chóng, giá rẻ và uy tín.",
+        requestTitle: "Yêu cầu dịch vụ",
+        submit: "Gửi yêu cầu",
+        remote: 'Dịch vụ này cần truy cập từ xa. Vui lòng tải và chạy <a href="https://anydesk.com/download" target="_blank" style="color:#007bff;text-decoration:underline;">AnyDesk</a> hoặc <a href="https://www.teamviewer.com/en/download/" target="_blank" style="color:#007bff;text-decoration:underline;">TeamViewer</a>.',
+        footer: 'Trang này là <a href="https://github.com/NammISADev/hupe" target="_blank">mã nguồn mở</a> | &copy; Namm 2023 - 2025'
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('welcome-title').textContent = translations[lang].welcome;
+      document.getElementById('welcome-desc').textContent = translations[lang].desc;
+      document.getElementById('get-started-btn-text').textContent = translations[lang].getStarted;
+      document.getElementById('why-title').textContent = translations[lang].why;
+      document.getElementById('why-cheap-title').textContent = translations[lang].cheap;
+      document.getElementById('why-cheap-desc').textContent = translations[lang].cheapDesc;
+      document.getElementById('why-fast-title').textContent = translations[lang].fast;
+      document.getElementById('why-fast-desc').textContent = translations[lang].fastDesc;
+      document.getElementById('why-reliable-title').textContent = translations[lang].reliable;
+      document.getElementById('why-reliable-desc').textContent = translations[lang].reliableDesc;
+      document.getElementById('why-back-btn').textContent = translations[lang].back;
+      document.getElementById('main-back-btn-text').textContent = translations[lang].back;
+      document.getElementById('main-title').textContent = translations[lang].mainTitle;
+      document.getElementById('main-desc').textContent = translations[lang].mainDesc;
+      document.getElementById('request-title').textContent = translations[lang].requestTitle;
+      document.getElementById('submit-request-btn-text').textContent = translations[lang].submit;
+      document.getElementById('service-back-btn-text').textContent = translations[lang].back;
+      document.getElementById('remote-link-text').innerHTML = translations[lang].remote;
+      document.getElementById('footer-text').innerHTML = translations[lang].footer;
+      document.getElementById('lang-toggle').textContent = lang === 'en' ? 'VN' : 'EN';
+    }
+
+    // Fix: Only define translations and remoteRequired once
     const remoteRequired = [
-      "Activate Windows (with MAS, free)",
-      "Optimize Windows for performance",
-      "Troubleshoot common Windows issues",
-      "Secure Windows (firewall, antivirus)",
-      "Back up and restore data",
-      "Customize Windows UI",
-      "Install/update drivers",
-      "Set up home Wi-Fi",
-      "Set up server (NAS, Apache, Minecraft, ...)",
-      "Configure routers/switches",
-      "VPN setup",
-      "Install essential apps",
-      "Remove bloatware/malware",
-      "Troubleshoot crashes",
-      "Install requested software (Office, Photoshop, etc.)",
-      "Create bootable USB",
-      "Configure OpenCore",
-      "Custom OpenCore config",
-      "Review config",
-      "Install requested apps",
-      "Create bootable USB",
-      "Install Wine/Waydroid",
-      "Troubleshoot package errors",
-      "Unlock phone (supported models)",
-      "Jailbreak iPhone (iOS 15 or below, attempt iOS 16+)",
-      "Install custom ROM + TWRP",
-      "Install GSI ROM",
-      "Install Magisk/KernelSU",
-      "Create bootable USB",
-      "VM setup (VMware, VirtualBox)",
-      "Create bootable USB"
+      "Activate Windows (with MAS, this is will be free)",
+      "Recover Windows installation from virus or malware infections (10.000 vnđ)",
+      "Install customized Windows ISOs (free) (Ghost Spectre, ...)",
+      "Make Windows PE (Recovery Enviroment) to recover your PC (free)",
+      "Set up server (NAS, Apache, Minecraft, ...) (7.500 vnđ)",
+      "Configure network devices (routers, switches, etc.) (15.000 vnđ)",
+      "Install Office, Autodesk, AutoCAD, Photoshop (latest), Premire, After Effect and more (you request me!) (5.000 vnđ because need to activate these app)",
+      "Install Hackintosh (macOS on a non-apple machine) (5.000 vnđ)",
+      "Configure OpenCore bootloader (including drivers, kexts, SMBIOS, etc.)",
+      "Review and troubleshoot OpenCore config (free)",
+      "Install needed app (you request me!) (free)",
+      "Troubleshoot common macOS issues (Kernel Panic, App can't be open, etc.) (free)",
+      "Unlock your phone (unlock bootloader) (25.000 vnđ)",
+      "Currently supported these unlockable brand: Huawei (Kirin), Samsung (Exynos), Xiaomi Mi/Redmi/POCO (MTK, bypass time), Xiaomi Mi/Redmi/Poco (Snapdragon or another chipset, wait 7 day), Oppo/Realme (deep test supported model), Fairphone, Sony, Pixel, Nothing",
+      "Jailbreak your iPhone (iOS 15 or below) (10.000 vnđ for iOS 16 and up)",
+      "Install custom ROM (if available) + TWRP (free)",
+      "Install GSI ROM (if your phone supported) (free)",
+      "Install Magisk/KernelSU (free)",
+      "Optimize your phone with root (5.000 vnđ)",
+      "Install BlissOS/Stock Android-x86 (free)",
+      "Create bootable USB drives for Android-based OS (free)",
+      "Dual-boot setup with Windows or Linux (free)",
+      "Install GApps or MicroG manually (free)",
+      "Troubleshoot app compatibility and crashes (free)",
+      "Virtual machine setup (run Android-x86 on VMware or VirtualBox) (free)",
+      "Install Brunch Framework/FydeOS/ChromeOS Flex (brunch take 10.000 vnđ)",
+      "Create bootable USB drives for Brunch, Flex or FydeOS (brunch take 10.000 vnđ)",
+      "Dual-boot ChromeOS/FydeOS/ChromeOS Flex with Windows or Linux (free)",
+      "Set up persistent storage and partitions correctly (free)",
+      "Enable Linux (Crostini) support for development and apps (free)",
+      "Install Android apps and APKs on FydeOS/Brunch (free)",
+      "Enable developer mode and root shell access (free)"
     ];
 
-    for (const category in data) {
-      const categoryDiv = document.createElement('div');
-      categoryDiv.className = 'category';
-      categoryDiv.innerHTML = `<strong>${category}</strong>`;
-      const servicesDiv = document.createElement('div');
-      servicesDiv.className = 'services';
-      data[category].forEach(service => {
-        const s = document.createElement('div');
-        s.className = 'service';
-        s.textContent = service;
-        s.onclick = () => {
-          selectedService = `${category} - ${service}`;
-          // Show remote link if required
-          if (remoteRequired.includes(service)) {
-            remoteLink.style.display = 'block';
-          } else {
-            remoteLink.style.display = 'none';
-          }
-          // Show selected service
-          document.getElementById('selected-service').textContent = selectedService;
-          serviceForm.style.display = 'block';
-          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-        servicesDiv.appendChild(s);
-      });
-      categoryDiv.onclick = () => {
-        servicesDiv.style.display = servicesDiv.style.display === 'block' ? 'none' : 'block';
-      };
-      categoryDiv.appendChild(servicesDiv);
-      categoriesEl.appendChild(categoryDiv);
+    document.getElementById('lang-toggle').onclick = function() {
+      setLang(currentLang === 'en' ? 'vi' : 'en');
+    };
+
+    // Dark mode
+    function setDarkMode(on) {
+      document.body.classList.toggle('dark', on);
+      // Change logo
+      document.getElementById('logo-img').src = on ? 'logo-dark.png' : 'logo.png';
+      document.getElementById('logo-img-main').src = on ? 'logo-dark.png' : 'logo.png';
+      document.getElementById('dark-toggle').textContent = on ? '☀️' : '🌙';
+    }
+    document.getElementById('dark-toggle').onclick = function() {
+      const isDark = document.body.classList.toggle('dark');
+      setDarkMode(isDark);
+    };
+
+    // Fix: Only define setLang, setDarkMode, showIntro, showMain, hideServiceForm, submitRequest, showContactInfo once
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('welcome-title').textContent = translations[lang].welcome;
+      document.getElementById('welcome-desc').textContent = translations[lang].desc;
+      document.getElementById('get-started-btn-text').textContent = translations[lang].getStarted;
+      document.getElementById('why-title').textContent = translations[lang].why;
+      document.getElementById('why-cheap-title').textContent = translations[lang].cheap;
+      document.getElementById('why-cheap-desc').textContent = translations[lang].cheapDesc;
+      document.getElementById('why-fast-title').textContent = translations[lang].fast;
+      document.getElementById('why-fast-desc').textContent = translations[lang].fastDesc;
+      document.getElementById('why-reliable-title').textContent = translations[lang].reliable;
+      document.getElementById('why-reliable-desc').textContent = translations[lang].reliableDesc;
+      document.getElementById('why-back-btn').textContent = translations[lang].back;
+      document.getElementById('main-back-btn-text').textContent = translations[lang].back;
+      document.getElementById('main-title').textContent = translations[lang].mainTitle;
+      document.getElementById('main-desc').textContent = translations[lang].mainDesc;
+      document.getElementById('request-title').textContent = translations[lang].requestTitle;
+      document.getElementById('submit-request-btn-text').textContent = translations[lang].submit;
+      document.getElementById('service-back-btn-text').textContent = translations[lang].back;
+      document.getElementById('remote-link-text').innerHTML = translations[lang].remote;
+      document.getElementById('footer-text').innerHTML = translations[lang].footer;
+      document.getElementById('lang-toggle').textContent = lang === 'en' ? 'VN' : 'EN';
+    }
+
+    function setDarkMode(on) {
+      document.body.classList.toggle('dark', on);
+      // Change logo
+      document.getElementById('logo-img').src = on ? 'logo-dark.png' : 'logo.png';
+      document.getElementById('logo-img-main').src = on ? 'logo-dark.png' : 'logo.png';
+      document.getElementById('dark-toggle').textContent = on ? '☀️' : '🌙';
+    }
+
+    function showIntro() {
+      document.getElementById('intro').classList.remove('hidden');
+      document.getElementById('main').classList.add('hidden');
+      document.getElementById('why-back-btn').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showMain() {
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('main').classList.remove('hidden');
+      document.getElementById('why-back-btn').style.display = 'inline-block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function hideServiceForm() {
@@ -445,18 +591,324 @@
       document.getElementById('selected-service').textContent = '';
     }
 
-    // Attach event listener after DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('submit-request-btn').onclick = submitRequest;
-    });
+    // Payment modal logic
+    let paymentStep = 1;
+    let paymentData = {
+      service: "",
+      payment: "",
+      contact: "",
+      userName: "",
+      phone: "",
+      email: "",
+      notes: "",
+      contactDirection: "me-contact-user" // default
+    };
 
+    function openPaymentFlow(selectedService, notes = "") {
+      paymentStep = 1;
+      paymentData = {
+        service: selectedService,
+        payment: "",
+        contact: "",
+        userName: "",
+        phone: "",
+        email: "",
+        notes: notes || "",
+        contactDirection: "me-contact-user"
+      };
+      showPaymentStep();
+      document.getElementById('payment-modal').style.display = 'flex';
+    }
+
+    function closePaymentModal() {
+      document.getElementById('payment-modal').style.display = 'none';
+    }
+
+    // Save user info to a JSON file (simulate by downloading)
+    function saveUserInfoAsJson() {
+      const info = {
+        service: paymentData.service,
+        payment: paymentData.payment,
+        contact: paymentData.contact,
+        userName: paymentData.userName,
+        phone: paymentData.phone,
+        email: paymentData.email,
+        notes: paymentData.notes,
+        contactDirection: paymentData.contactDirection,
+        timestamp: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(info, null, 2)], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "hupe_request.json";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+    }
+
+    function showPaymentStep() {
+      const content = document.getElementById('payment-content');
+      let html = '';
+      // Progress bar (now 4 steps)
+      html += `
+        <div style="display:flex;justify-content:center;align-items:center;margin-bottom:18px;gap:8px;">
+          <div style="flex:1;height:6px;border-radius:3px;background:${paymentStep>=1?'#007bff':'#e0e0e0'};"></div>
+          <div style="flex:1;height:6px;border-radius:3px;background:${paymentStep>=2?'#007bff':'#e0e0e0'};"></div>
+          <div style="flex:1;height:6px;border-radius:3px;background:${paymentStep>=3?'#007bff':'#e0e0e0'};"></div>
+          <div style="flex:1;height:6px;border-radius:3px;background:${paymentStep>=4?'#007bff':'#e0e0e0'};"></div>
+        </div>
+      `;
+      if (paymentStep === 1) {
+        // Step 1: Choose service (already chosen)
+        html += `
+          <h2 style="margin-top:0;">${currentLang === 'vi' ? '1️⃣ Chọn dịch vụ' : '1️⃣ Choose Service'}</h2>
+          <div style="margin:18px 0 24px 0;font-weight:bold;color:#007bff;">${paymentData.service}</div>
+          <button onclick="nextPaymentStep()" style="margin-top:10px;padding:8px 22px;border-radius:25px;border:none;background:#007bff;color:#fff;cursor:pointer;">
+            ${currentLang === 'vi' ? 'Tiếp tục' : 'Continue'} <span style="font-size:1.1em;">→</span>
+          </button>
+          <button onclick="closePaymentModal()" class="back-btn" style="margin-left:10px;">${currentLang === 'vi' ? 'Hủy' : 'Cancel'}</button>
+        `;
+      } else if (paymentStep === 2) {
+        const isFree = /free|miễn phí/i.test(paymentData.service);
+        const isReinstall = paymentData.service && paymentData.service.toLowerCase().includes('(re)install windows');
+        const contactDir = paymentData.contactDirection;
+        html += `
+          <h2 style="margin-top:0;">${currentLang === 'vi' ? '2️⃣ Thanh toán & Liên hệ' : '2️⃣ Payment & Contact'}</h2>
+          <div style="margin-bottom:14px;">
+            <b>${currentLang === 'vi' ? 'Phương thức thanh toán:' : 'Payment method:'}</b>
+            <div style="margin:10px 0;">
+              <label style="display:block;margin-bottom:6px;">
+                <input type="radio" name="paymethod" value="zalopay" ${isFree?'disabled':''} ${paymentData.payment==='zalopay'?'checked':''}>
+                ZaloPay
+              </label>
+              <label style="display:block;margin-bottom:6px;">
+                <input type="radio" name="paymethod" value="phone" ${isFree?'disabled':''} ${paymentData.payment==='phone'?'checked':''}>
+                ${currentLang === 'vi' ? 'Nạp tiền điện thoại' : 'Add credit to phone number'}
+              </label>
+              ${isFree ? `<div style="color:#007bff;font-size:0.98em;margin-top:6px;">
+                ${isReinstall
+                  ? (currentLang === 'vi'
+                      ? 'Dịch vụ này miễn phí cho cài đặt sạch (Clean Install).'
+                      : 'This service is free for Clean Install only.')
+                  : (currentLang === 'vi'
+                      ? 'Dịch vụ miễn phí, không cần thanh toán.'
+                      : 'This service is free, no payment required.')}
+                </div>` : ''}
+            </div>
+          </div>
+          <div style="margin:14px 0 0 0; color:#007bff; font-size:0.98em;">
+            ${currentLang === 'vi'
+              ? 'Nếu bạn chọn phương thức thanh toán là nạp tiền điện thoại, trước khi mình thao tác trên máy bạn, vui lòng nạp tiền trước vào số điện thoại: +84, 0931981731, Mobifone.'
+              : 'If you selected the phone number payment method, before I do anything to your machine, please make payment first to this phone number: +84, 0931981731, Mobifone.'}
+          </div>
+          <div style="margin-bottom:14px;margin-top:14px;">
+            <b>${currentLang === 'vi' ? 'Ai sẽ chủ động liên hệ?' : 'Who will contact?'}</b>
+            <div style="margin:10px 0;">
+              <label style="display:block;margin-bottom:6px;">
+                <input type="radio" name="contactdirection" value="me-contact-user" ${contactDir==='me-contact-user'?'checked':''}>
+                ${currentLang === 'vi' ? 'Tôi sẽ liên hệ bạn' : 'I will contact you'}
+              </label>
+              <label style="display:block;">
+                <input type="radio" name="contactdirection" value="user-contact-me" ${contactDir==='user-contact-me'?'checked':''}>
+                ${currentLang === 'vi' ? 'Bạn sẽ liên hệ tôi' : 'You will contact me'}
+              </label>
+            </div>
+          </div>
+          <button onclick="prevPaymentStep()" class="back-btn" style="margin-right:10px;"><span class="arrow-left">←</span> ${currentLang === 'vi' ? 'Quay lại' : 'Back'}</button>
+          <button onclick="nextPaymentStep()" style="padding:8px 22px;border-radius:25px;border:none;background:#007bff;color:#fff;cursor:pointer;">
+            ${currentLang === 'vi' ? 'Tiếp tục' : 'Continue'} <span class="arrow-right">→</span>
+          </button>
+          <div style="margin-top:18px;font-size:0.98em;color:#888;">
+            <span>🔒 Secure by Github Payment</span>
+          </div>
+        `;
+      } else if (paymentStep === 3) {
+        // Step 3: Your information form
+        if (paymentData.contactDirection !== 'user-contact-me') {
+          html += `
+            <h2 style="margin-top:0;">${currentLang === 'vi' ? '3️⃣ Thông tin của bạn' : '3️⃣ Your Information'}</h2>
+            <form id="user-info-form" action="https://formspree.io/f/xeogyzgv" method="POST" style="margin-bottom:14px;">
+              <b>${currentLang === 'vi' ? 'Thông tin của bạn:' : 'Your information:'}</b><br>
+              <label>
+                ${currentLang === 'vi' ? 'Tên của bạn:' : 'Full Name:'}<br>
+                <input id="pay-username" type="text" name="name" required value="${paymentData.userName||''}" style="margin:6px 0 6px 0;width:96%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+              </label><br><br>
+              <label>
+                ${currentLang === 'vi' ? 'Số điện thoại:' : 'Phone Number:'}<br>
+                <input id="pay-phone" type="tel" name="phone" required value="${paymentData.phone||''}" style="margin:6px 0 6px 0;width:96%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+              </label><br><br>
+              <label>
+                Email:<br>
+                <input id="pay-email" type="email" name="email" required value="${paymentData.email||''}" style="margin:6px 0 6px 0;width:96%;padding:8px;border-radius:8px;border:1px solid #ccc;">
+              </label><br><br>
+              <label>
+                ${currentLang === 'vi' ? 'Ghi chú:' : 'Notes:'}<br>
+                <textarea id="pay-notes" name="notes" required rows="5" style="margin-top:6px;width:96%;padding:8px;border-radius:8px;border:1px solid #ccc;resize:vertical;min-height:48px;">${paymentData.notes||''}</textarea>
+              </label><br>
+              <div style="color:#d9534f;font-size:0.98em;margin:8px 0 8px 0;">
+                ${currentLang === 'vi'
+                  ? 'Vui lòng ghi rõ phương thức liên hệ (Zalo hoặc Gmail) trong phần ghi chú.'
+                  : 'Please specify your contact method (Zalo or Gmail) in the Notes field.'}
+              </div>
+              <button type="submit" style="padding:8px 22px;border-radius:25px;border:none;background:#007bff;color:#fff;cursor:pointer;">
+                ${currentLang === 'vi' ? 'Gửi' : 'Send'}
+              </button>
+            </form>
+            <div style="color:#007bff;font-size:0.98em;margin-top:8px;">
+              ${currentLang === 'vi'
+                ? 'Sau khi gửi thông tin, bạn cần nhấn nút "Tiếp tục" để hoàn tất.'
+                : 'After sending your information, you need to press "Continue" to finish.'}
+            </div>
+            <button onclick="prevPaymentStep()" class="back-btn" style="margin-right:10px;"><span class="arrow-left">←</span> ${currentLang === 'vi' ? 'Quay lại' : 'Back'}</button>
+            <button id="continue-to-4-btn" style="padding:8px 22px;border-radius:25px;border:none;background:#007bff;color:#fff;cursor:pointer;display:none;margin-left:10px;">
+              ${currentLang === 'vi' ? 'Tiếp tục' : 'Continue'} <span class="arrow-right">→</span>
+            </button>
+          `;
+        } else {
+          // If user will contact me, skip info form and show thank you
+          paymentStep = 4;
+          showPaymentStep();
+          return;
+        }
+      } else if (paymentStep === 4) {
+        // Step 4: Thank you
+        let contactHtml = '';
+        if (paymentData.contactDirection === 'user-contact-me') {
+          contactHtml = `
+            <div style="margin-bottom:18px;">
+              ${currentLang === 'vi'
+                ? 'Bạn hãy chủ động liên hệ qua Zalo hoặc Email:'
+                : 'Please contact us directly via Zalo or Email:'}
+              <div style="margin-top:8px;">
+                <a href="https://zalo.me/0931981731" target="_blank" style="color:#007bff;text-decoration:underline;">Zalo</a>
+                &nbsp;|&nbsp;
+                <a href="mailto:namb20994@gmail.com" style="color:#007bff;text-decoration:underline;">Email</a>
+              </div>
+            </div>
+          `;
+        } else {
+          contactHtml = `
+            <div style="margin-bottom:18px;">
+              ${currentLang === 'vi'
+                ? 'Chúng tôi sẽ liên hệ bạn sớm qua thông tin bạn đã cung cấp.'
+                : 'We will contact you soon using your provided information.'}
+            </div>
+          `;
+        }
+        html += `
+          <h2 style="margin-top:0;">${currentLang === 'vi' ? '4️⃣ Hoàn tất' : '4️⃣ Thank you :3'}</h2>
+          <div style="margin:18px 0 24px 0;font-weight:bold;color:#007bff;">
+            ${currentLang === 'vi' ? 'Cảm ơn bạn đã gửi yêu cầu.' : 'Thank you for your request.'}
+          </div>
+          ${contactHtml}
+          <button onclick="closePaymentModal()" style="margin-top:10px;padding:8px 22px;border-radius:25px;border:none;background:#007bff;color:#fff;cursor:pointer;">
+            ${currentLang === 'vi' ? 'Đóng' : 'Close'}
+          </button>
+        `;
+      }
+      content.innerHTML = html;
+
+      // Add event listeners for radio and input fields (step 2)
+      if (paymentStep === 2) {
+        document.querySelectorAll('input[name="paymethod"]').forEach(el => {
+          el.onchange = function() {
+            paymentData.payment = this.value;
+          };
+        });
+        document.querySelectorAll('input[name="contactdirection"]').forEach(el => {
+          el.onchange = function() {
+            paymentData.contactDirection = this.value;
+          };
+        });
+      }
+      // Add event listeners for info form (step 3)
+      if (paymentStep === 3 && paymentData.contactDirection !== 'user-contact-me') {
+        document.getElementById('pay-username').oninput = function() {
+          paymentData.userName = this.value;
+        };
+        document.getElementById('pay-phone').oninput = function() {
+          paymentData.phone = this.value;
+        };
+        document.getElementById('pay-email').oninput = function() {
+          paymentData.email = this.value;
+        };
+        document.getElementById('pay-notes').oninput = function() {
+          paymentData.notes = this.value;
+        };
+        // Custom submit: require contact method in notes, then show Continue button
+        const userInfoForm = document.getElementById('user-info-form');
+        const continueBtn = document.getElementById('continue-to-4-btn');
+        if (userInfoForm && continueBtn) {
+          userInfoForm.onsubmit = function(e) {
+            e.preventDefault();
+            const notes = document.getElementById('pay-notes').value.trim().toLowerCase();
+            if (!notes.includes('zalo') && !notes.includes('gmail')) {
+              alert(currentLang === 'vi'
+                ? 'Vui lòng ghi rõ phương thức liên hệ (Zalo hoặc Gmail) trong phần ghi chú.'
+                : 'Please specify your contact method (Zalo or Gmail) in the Notes field.');
+              return false;
+            }
+            // Actually submit the form to Formspree
+            userInfoForm.submit();
+            // Show Continue button, hide form
+            userInfoForm.style.display = 'none';
+            continueBtn.style.display = '';
+            return false;
+          };
+          continueBtn.onclick = function() {
+            paymentStep = 4;
+            showPaymentStep();
+          };
+        }
+      }
+    }
+
+    function nextPaymentStep() {
+      if (paymentStep === 1) {
+        paymentStep = 2;
+        showPaymentStep();
+      } else if (paymentStep === 2) {
+        // Only require info if "me-contact-user"
+        if (paymentData.contactDirection !== 'user-contact-me') {
+          paymentStep = 3;
+          showPaymentStep();
+        } else {
+          paymentStep = 4;
+          showPaymentStep();
+        }
+      }
+    }
+
+    function prevPaymentStep() {
+      if (paymentStep === 2) {
+        paymentStep = 1;
+        showPaymentStep();
+      } else if (paymentStep === 3) {
+        paymentStep = 2;
+        showPaymentStep();
+      } else if (paymentStep === 4) {
+        if (paymentData.contactDirection !== 'user-contact-me') {
+          paymentStep = 3;
+        } else {
+          paymentStep = 2;
+        }
+        showPaymentStep();
+      }
+    }
+
+    // Replace submitRequest to use payment modal
     function submitRequest() {
-      alert(`Request Submitted:\nService: ${selectedService}`);
+      // alert(`Request Submitted:\nService: ${selectedService}`);
+      // document.getElementById('selected-service').textContent = '';
+      // serviceForm.style.display = 'none';
+      // showContactInfo();
+      openPaymentFlow(selectedService);
       document.getElementById('selected-service').textContent = '';
       serviceForm.style.display = 'none';
-
-      // Show contact info modal
-      showContactInfo();
     }
 
     // Contact info modal
@@ -518,97 +970,57 @@
       document.body.appendChild(modal);
     }
 
-    // Language and dark mode support
-    const translations = {
-      en: {
-        welcome: "Welcome to Hupe",
-        desc: "Your one-stop destination for IT solutions across Windows, Linux, macOS, Android, and more.",
-        getStarted: "Get Started",
-        why: "Why Choose Hupe?",
-        cheap: "Cheap",
-        cheapDesc: "Affordable IT support for everyone, without hidden fees.",
-        fast: "Fast",
-        fastDesc: "Quick response and rapid solutions to get you running ASAP.",
-        reliable: "Reliable",
-        reliableDesc: "Professional, trustworthy service tailored to your needs.",
-        back: "Back",
-        mainTitle: "Please choose the service you'd like.",
-        mainDesc: "We offer 55+ specialized IT services designed to optimize your devices across Windows, Linux, macOS, Android, and more. From fresh OS installations and performance tuning to data recovery and network setup, our experts provide tailored solutions with a focus on speed, affordability, and reliability.",
-        requestTitle: "Request a Service",
-        submit: "Submit Request",
-        remote: 'This service requires remote access. Please download and run <a href="https://anydesk.com/download" target="_blank" style="color:#007bff;text-decoration:underline;">AnyDesk</a> or <a href="https://www.teamviewer.com/en/download/" target="_blank" style="color:#007bff;text-decoration:underline;">TeamViewer</a>.',
-        footer: 'This page is <a href="https://github.com/NammISADev/hupe" target="_blank">open source</a> | &copy; Namm 2023 - 2025'
-      },
-      vi: {
-        welcome: "Chào mừng đến với Hupe",
-        desc: "Nơi bạn nhận được mọi giải pháp IT cho Windows, Linux, macOS, Android và nhiều nền tảng khác.",
-        getStarted: "Bắt đầu",
-        why: "Tại sao chọn Hupe?",
-        cheap: "Rẻ",
-        cheapDesc: "Hỗ trợ IT giá rẻ cho mọi người, không phí ẩn.",
-        fast: "Nhanh",
-        fastDesc: "Phản hồi nhanh và xử lý sự cố tức thì.",
-        reliable: "Uy tín",
-        reliableDesc: "Dịch vụ chuyên nghiệp, đáng tin cậy, phù hợp nhu cầu.",
-        back: "Quay lại",
-        mainTitle: "Vui lòng chọn dịch vụ bạn muốn.",
-        mainDesc: "Chúng tôi cung cấp hơn 55 dịch vụ IT chuyên sâu tối ưu cho Windows, Linux, macOS, Android... Từ cài đặt hệ điều hành, tối ưu hiệu năng, phục hồi dữ liệu đến thiết lập mạng, đội ngũ chuyên gia của chúng tôi luôn tận tâm, nhanh chóng, giá rẻ và uy tín.",
-        requestTitle: "Yêu cầu dịch vụ",
-        submit: "Gửi yêu cầu",
-        remote: 'Dịch vụ này cần truy cập từ xa. Vui lòng tải và chạy <a href="https://anydesk.com/download" target="_blank" style="color:#007bff;text-decoration:underline;">AnyDesk</a> hoặc <a href="https://www.teamviewer.com/en/download/" target="_blank" style="color:#007bff;text-decoration:underline;">TeamViewer</a>.',
-        footer: 'Trang này là <a href="https://github.com/NammISADev/hupe" target="_blank">mã nguồn mở</a> | &copy; Namm 2023 - 2025'
+    // Fix: Only attach event listeners once DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('submit-request-btn').onclick = submitRequest;
+      document.getElementById('get-started-btn').onclick = showMain;
+      document.getElementById('lang-toggle').onclick = function() {
+        setLang(currentLang === 'en' ? 'vi' : 'en');
+      };
+      document.getElementById('dark-toggle').onclick = function() {
+        const isDark = document.body.classList.toggle('dark');
+        setDarkMode(isDark);
+      };
+      // Set initial language and dark mode after DOM is ready
+      setLang('en');
+      setDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    });
+
+    // Fix: Only generate categories/services after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      for (const category in data) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category';
+        categoryDiv.innerHTML = `<strong>${category}</strong>`;
+        const servicesDiv = document.createElement('div');
+        servicesDiv.className = 'services';
+        data[category].forEach(service => {
+          const s = document.createElement('div');
+          s.className = 'service';
+          s.textContent = service;
+          s.onclick = () => {
+            selectedService = `${category} - ${service}`;
+            // Show remote link if required
+            if (remoteRequired.includes(service)) {
+              remoteLink.style.display = 'block';
+              document.getElementById('remote-link-text').innerHTML =
+                (translations[currentLang] ? translations[currentLang].remote : translations['en'].remote);
+            } else {
+              remoteLink.style.display = 'none';
+            }
+            document.getElementById('selected-service').textContent = selectedService;
+            serviceForm.style.display = 'block';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+          }
+          servicesDiv.appendChild(s);
+        });
+        categoryDiv.onclick = () => {
+          servicesDiv.style.display = servicesDiv.style.display === 'block' ? 'none' : 'block';
+        };
+        categoryDiv.appendChild(servicesDiv);
+        categoriesEl.appendChild(categoryDiv);
       }
-    };
-
-    let currentLang = 'en';
-
-    function setLang(lang) {
-      currentLang = lang;
-      document.getElementById('welcome-title').textContent = translations[lang].welcome;
-      document.getElementById('welcome-desc').textContent = translations[lang].desc;
-      document.getElementById('get-started-btn').textContent = translations[lang].getStarted;
-      document.getElementById('why-title').textContent = translations[lang].why;
-      document.getElementById('why-cheap-title').textContent = translations[lang].cheap;
-      document.getElementById('why-cheap-desc').textContent = translations[lang].cheapDesc;
-      document.getElementById('why-fast-title').textContent = translations[lang].fast;
-      document.getElementById('why-fast-desc').textContent = translations[lang].fastDesc;
-      document.getElementById('why-reliable-title').textContent = translations[lang].reliable;
-      document.getElementById('why-reliable-desc').textContent = translations[lang].reliableDesc;
-      document.getElementById('why-back-btn').textContent = translations[lang].back;
-      document.getElementById('main-back-btn').textContent = translations[lang].back;
-      document.getElementById('main-title').textContent = translations[lang].mainTitle;
-      document.getElementById('main-desc').textContent = translations[lang].mainDesc;
-      document.getElementById('request-title').textContent = translations[lang].requestTitle;
-      document.getElementById('submit-request-btn').textContent = translations[lang].submit;
-      document.getElementById('service-back-btn').textContent = translations[lang].back;
-      document.getElementById('remote-link-text').innerHTML = translations[lang].remote;
-      document.getElementById('footer-text').innerHTML = translations[lang].footer;
-      document.getElementById('lang-toggle').textContent = lang === 'en' ? 'VN' : 'EN';
-    }
-
-    document.getElementById('lang-toggle').onclick = function() {
-      setLang(currentLang === 'en' ? 'vi' : 'en');
-    };
-
-    // Dark mode
-    function setDarkMode(on) {
-      document.body.classList.toggle('dark', on);
-      // Change logo
-      document.getElementById('logo-img').src = on ? 'logo-dark.png' : 'logo.png';
-      document.getElementById('logo-img-main').src = on ? 'logo-dark.png' : 'logo.png';
-      document.getElementById('dark-toggle').textContent = on ? '☀️' : '🌙';
-    }
-    document.getElementById('dark-toggle').onclick = function() {
-      const isDark = document.body.classList.toggle('dark');
-      setDarkMode(isDark);
-    };
-
-    // Set initial language and dark mode
-    setLang('en');
-    setDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-    // ...existing code for categories, serviceForm, etc...
-    // ...existing code...
+    });
   </script>
 </body>
 </html>
